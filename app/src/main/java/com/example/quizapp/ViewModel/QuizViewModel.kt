@@ -1,9 +1,18 @@
 package com.example.quizapp.ViewModel
 
-import android.util.Log
+import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.quizapp.QuizApp
 import com.example.quizapp.data.Question
+import com.example.quizapp.resultScreen
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class QuizViewModel : ViewModel() {
@@ -14,8 +23,20 @@ class QuizViewModel : ViewModel() {
     )
     private var currentIndex = 0
 
-     var selectedIndex = mutableStateOf(-1)
-        private set
+    private val _timeLeft = mutableStateOf(5)
+    val timeLeft: State<Int> = _timeLeft
+
+    /**
+         * Holds the mutable state indicating whether the quiz is ongoing.
+         * Used to control the quiz flow and UI updates.
+         */
+        private var _isQuizGoingOn = mutableStateOf(true)
+
+        /**
+         * Exposes the quiz ongoing state as an immutable State to observers.
+         * UI components should observe this property for changes.
+         */
+        val _isQuizGoingon: State<Boolean> = _isQuizGoingOn
 
 
     var score = 0
@@ -46,12 +67,22 @@ class QuizViewModel : ViewModel() {
             score++
             currentIndex++
             currentQuestion.value = _questions.getOrNull(currentIndex)
-        }else if(question != null && selected != question.correctAnswerIndex){
+        }else {
             currentIndex++
             currentQuestion.value = _questions.getOrNull(currentIndex)
         }
 
     }
+    fun startTimer(){
+        viewModelScope.launch {
+            while (_timeLeft.value > 0){
+                delay(1000L)
+                _timeLeft.value -= 1
+            }
+            _isQuizGoingOn.value = false
+        }
+    }
+
 
 
 }
