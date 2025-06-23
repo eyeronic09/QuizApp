@@ -63,7 +63,6 @@ fun QuizApp(viewModel: QuizViewModel) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             Text(
                 text = question?.question ?: " ",
                 style = MaterialTheme.typography.titleLarge,
@@ -95,11 +94,9 @@ fun QuizApp(viewModel: QuizViewModel) {
         }
 
     }
-
-
-
-    if (question?.id == null || timer == 0) {
+    if (!isQuizIsRuninng) {
         resultScreen(viewModel)
+        return
     }
 }
 

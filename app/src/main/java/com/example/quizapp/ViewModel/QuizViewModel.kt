@@ -23,7 +23,7 @@ class QuizViewModel : ViewModel() {
     )
     private var currentIndex = 0
 
-    private val _timeLeft = mutableStateOf(5)
+    private val _timeLeft = mutableStateOf(10)
     val timeLeft: State<Int> = _timeLeft
 
     /**
@@ -32,11 +32,12 @@ class QuizViewModel : ViewModel() {
          */
         private var _isQuizGoingOn = mutableStateOf(true)
 
+
         /**
          * Exposes the quiz ongoing state as an immutable State to observers.
          * UI components should observe this property for changes.
          */
-        val _isQuizGoingon: State<Boolean> = _isQuizGoingOn
+        val _isQuizGoingon: State<Boolean>  get() = _isQuizGoingOn
 
 
     var score = 0
@@ -65,11 +66,11 @@ class QuizViewModel : ViewModel() {
         val question = currentQuestion.value
         if(question != null && selected == question.correctAnswerIndex){
             score++
-            currentIndex++
-            currentQuestion.value = _questions.getOrNull(currentIndex)
-        }else {
-            currentIndex++
-            currentQuestion.value = _questions.getOrNull(currentIndex)
+        }
+        currentIndex++
+        currentQuestion.value =  _questions.getOrNull(currentIndex)
+        if (currentQuestion.value == null) {
+            _isQuizGoingOn.value = false
         }
 
     }
