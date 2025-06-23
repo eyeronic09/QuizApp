@@ -8,9 +8,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.quizapp.QuizApp
+
 import com.example.quizapp.data.Question
-import com.example.quizapp.resultScreen
+
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
