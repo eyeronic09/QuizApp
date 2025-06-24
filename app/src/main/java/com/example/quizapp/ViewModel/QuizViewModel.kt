@@ -1,5 +1,6 @@
 package com.example.quizapp.ViewModel
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -25,6 +26,8 @@ class QuizViewModel : ViewModel() {
 
     private val _timeLeft = mutableStateOf(10)
     val timeLeft: State<Int> = _timeLeft
+
+    private var timerStarted = false
 
     /**
          * Holds the mutable state indicating whether the quiz is ongoing.
@@ -74,16 +77,22 @@ class QuizViewModel : ViewModel() {
         }
 
     }
-    fun startTimer(){
-        viewModelScope.launch {
-            while (_timeLeft.value > 0){
-                delay(1000L)
-                _timeLeft.value -= 1
+   /**
+         * Starts the countdown timer for the quiz.
+         * Ensures the timer is only started once.
+         * Decrements the time left every second.
+         * When the timer reaches zero, ends the quiz by updating the quiz state.
+         */
+        fun startTimer(){
+            if (timerStarted) return
+            Log.d("timerStartedVM" , timerStarted.toString())
+            timerStarted = true
+            viewModelScope.launch {
+                while (_timeLeft.value > 0){
+                    delay(1000L)
+                    _timeLeft.value -= 1
+                }
+                _isQuizGoingOn.value = false
             }
-            _isQuizGoingOn.value = false
         }
-    }
-
-
-
 }
